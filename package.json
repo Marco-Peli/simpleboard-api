@@ -1,0 +1,26 @@
+{
+  "name": "simpleboard-api",
+  "version": "1.0.0",
+  "description": "backend api for simpleboard frontend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marco-Peli/simpleboard-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Marco-Peli/simpleboard-api/issues"
+  },
+  "homepage": "https://github.com/Marco-Peli/simpleboard-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
