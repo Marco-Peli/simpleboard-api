@@ -22,7 +22,6 @@ exports.registerUser = async function (res, registerData)
     err_msg: 'ok'
   }
   let validateResp =  regHandler.validateRegisterData(registerData);
-  let dbResponse = {};
   let salt = '';
   let passHash = '';
 
@@ -35,7 +34,10 @@ exports.registerUser = async function (res, registerData)
         login: registerData.login,
         password: passHash
       };
-      dbResponse = await db('simpleboard-api.login').insert(digestData);
+      await db.transaction(async trx => {
+        await db('simpleboard-api.login').insert(digestData).transacting(trx);
+        await db('simpleboard-api.users').insert({username: registerData.login, join_date: new Date()}).transacting(trx);
+      })
   	}
   	catch(err)
     {
@@ -43,8 +45,6 @@ exports.registerUser = async function (res, registerData)
   			err_stat: consts.REG_FAILED,
   			err_msg: 'email already registered'
   		}
-
-      dbResponse = err;
   	}
   }
   else {
