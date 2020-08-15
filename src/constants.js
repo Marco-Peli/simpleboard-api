@@ -1,9 +1,11 @@
 exports.SERVER_PORT = 3001;
-exports.LOGIN_SUCCESSFUL = 1;
-exports.LOGIN_FAILED = 0;
 exports.REG_SUCCESSFUL = 1;
 exports.REG_FAILED = 0;
+exports.LOGIN_SUCCESSFUL = this.REG_SUCCESSFUL;
+exports.LOGIN_FAILED = this.REG_FAILED;
+exports.DATA_VALID = 1;
+exports.DATA_INVALID = 0;
 exports.MAX_PASS_LENGTH = 20;
 exports.MAX_EMAIL_LENGTH = 50;
-exports.login = 'pippo';
-exports.password = 'ciao';
+exports.LOGIN_PATH = '/login';
+exports.REGISTER_PATH = '/register';

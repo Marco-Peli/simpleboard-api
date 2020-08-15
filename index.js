@@ -5,21 +5,24 @@ var express = require('express');
 var app = express();
 app.use(express.json());
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-	dbHandler.knex.select('*').from('simpleboard-api.login').then(data => {
-		console.log(data)});
-});
-
-app.post('/register', function (req, res) {
+app.post(constants.REGISTER_PATH, function (req, res) {
 	let registerData = {
 		login: req.body.email,
 		password: req.body.password
 	}
-	console.log('registerdata:', registerData);
+  console.log('REGISTER');
 	dbHandler.registerUser(res, registerData);
 });
 
+app.post(constants.LOGIN_PATH, function (req, res) {
+	let loginData = {
+		login: req.body.email,
+		password: req.body.password
+	}
+  console.log('LOGIN');
+	dbHandler.loginUser(res, loginData);
+});
+
 app.listen(constants.SERVER_PORT, function () {
-  console.log('Example app listening on port ' + constants.SERVER_PORT);
+  console.log('Simpleboard-api running on port: ' + constants.SERVER_PORT);
 });
