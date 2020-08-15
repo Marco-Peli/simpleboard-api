@@ -3,5 +3,7 @@ exports.LOGIN_SUCCESSFUL = 1;
 exports.LOGIN_FAILED = 0;
 exports.REG_SUCCESSFUL = 1;
 exports.REG_FAILED = 0;
+exports.MAX_PASS_LENGTH = 20;
+exports.MAX_EMAIL_LENGTH = 50;
 exports.login = 'pippo';
 exports.password = 'ciao';
