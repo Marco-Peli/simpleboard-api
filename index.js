@@ -2,8 +2,11 @@ var constants = require('./src/constants');
 var dbHandler = require('./src/db_handler');
 var registerUtils = require('./src/register_utils');
 var express = require('express');
+var cors = require('cors');
 var app = express();
+
 app.use(express.json());
+app.use(cors());
 
 app.post(constants.REGISTER_PATH, function (req, res) {
 	let registerData = {
