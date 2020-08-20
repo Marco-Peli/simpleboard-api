@@ -63,33 +63,32 @@ exports.loginUser = async function (res, loginData)
   }
 
   let compareRet = false;
-  let validateResp =  regHandler.validateRegisterData(loginData);
+  let validateResp = {};
 
-  if(validateResp.err_stat === consts.DATA_VALID)
+  try
   {
-    try
+    validateResp =  regHandler.validateRegisterData(loginData);
+    if(validateResp.err_stat !== consts.LOGIN_SUCCESSFUL)
     {
-      let passObj = await db('simpleboard-api.login').where({
-                    login: loginData.login
-                  }).select('password');
-      let passHash = passObj[0].password;
-      let compareRet = await bcrypt.compare(loginData.password, passHash);
-      if(!compareRet)
-      {
-        throw 'Username and/or password is incorrect';
-      }
-  	}
-  	catch(e)
+      throw "Err";
+    }
+    let passObj = await db('simpleboard-api.login').where({
+                  login: loginData.login
+                }).select('password');
+    let passHash = passObj[0].password;
+    let compareRet = await bcrypt.compare(loginData.password, passHash);
+    if(!compareRet)
     {
-      msg = {
-  			err_stat: consts.REG_FAILED,
-  			err_msg: 'Username and/or password is incorrect'
-  		}
-  	}
-  }
-  else {
-    msg.err_stat = validateResp.err_stat;
-    msg.err_msg = validateResp.err_msg;
-  }
+      throw 'Username and/or password is incorrect';
+    }
+	}
+	catch(e)
+  {
+    msg = {
+			err_stat: consts.REG_FAILED,
+			err_msg: 'Username and/or password is incorrect'
+		}
+	}
+
   res.json(msg);
 }
