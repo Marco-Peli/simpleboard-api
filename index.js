@@ -4,9 +4,12 @@ var registerUtils = require('./src/register_utils');
 var express = require('express');
 var cors = require('cors');
 var app = express();
+var socketHandler = require('./src/socket_io_handler');
 
+constants.readConfigFile();
 app.use(express.json());
 app.use(cors());
+socketHandler.registerSocketEvents();
 
 app.post(constants.REGISTER_PATH, function (req, res) {
 	let registerData = {
