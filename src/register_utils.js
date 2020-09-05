@@ -4,7 +4,7 @@ let constants = {};
 exports.registerUtilsInitVars = function()
 {
   constants = require('./config_handler').mainConfig;
-  console.log(consts.REGISTER_UTILS_MODULE_PREFIX, "register utils module init");
+  console.log(constants.REGISTER_UTILS_MODULE_PREFIX, "register utils module init");
 }
 
 exports.validateRegisterData = function(userData)

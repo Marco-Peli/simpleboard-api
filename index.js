@@ -1,14 +1,15 @@
 var constUtils = require('./src/config_handler');
 var dbHandler = require('./src/db_handler');
 var registerUtils = require('./src/register_utils');
+var socketHandler = require('./src/socket_io_handler');
 var express = require('express');
 var cors = require('cors');
 var app = express();
-var socketHandler = require('./src/socket_io_handler');
 
 constUtils.readConfigFile();
 dbHandler.dbHandlerInitVars();
 socketHandler.initSocketIOvars();
+registerUtils.registerUtilsInitVars();
 var constants = require('./src/config_handler').mainConfig;
 app.use(express.json());
 app.use(cors());

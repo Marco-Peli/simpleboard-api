@@ -1,21 +1,21 @@
 let consts = {};
 const regHandler = require('./register_utils');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
-const db = require('knex')({
-  client: 'pg',
-  connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password : 'Musiamusia96!',
-    database : 'simpleboard-api'
-  }
-});
+let db = {};
 
 exports.dbHandlerInitVars = function()
 {
   consts = require('./config_handler').mainConfig;
+  db = require('knex')({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : consts.DB_USERNAME,
+      password : consts.DB_PASSWORD,
+      database : consts.DB_NAME
+    }
+  });
   console.log(consts.DB_HANDLER_MODULE_PREFIX, "db handler module init");
 }
 
@@ -24,7 +24,7 @@ exports.knex = db;
 exports.registerUser = async function (res, registerData)
 {
   let msg = {
-    err_stat: consts.mainConfig.REG_SUCCESSFUL,
+    err_stat: consts.REG_SUCCESSFUL,
     err_msg: 'ok'
   }
   let validateResp =  regHandler.validateRegisterData(registerData);
@@ -35,7 +35,7 @@ exports.registerUser = async function (res, registerData)
   {
     try
     {
-      passHash = await bcrypt.hash(registerData.password, saltRounds);
+      passHash = await bcrypt.hash(registerData.password, consts.SALT_ROUNDS);
       let digestData = {
         login: registerData.login,
         password: passHash
