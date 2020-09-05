@@ -1,4 +1,4 @@
-const consts = require('./constants');
+let consts = {};
 const regHandler = require('./register_utils');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -13,12 +13,18 @@ const db = require('knex')({
   }
 });
 
+exports.dbHandlerInitVars = function()
+{
+  consts = require('./config_handler').mainConfig;
+  console.log(consts.DB_HANDLER_MODULE_PREFIX, "db handler module init");
+}
+
 exports.knex = db;
 
 exports.registerUser = async function (res, registerData)
 {
   let msg = {
-    err_stat: consts.REG_SUCCESSFUL,
+    err_stat: consts.mainConfig.REG_SUCCESSFUL,
     err_msg: 'ok'
   }
   let validateResp =  regHandler.validateRegisterData(registerData);

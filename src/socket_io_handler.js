@@ -1,7 +1,15 @@
-const io = require('socket.io')(3002);
+let config = {};
+let io = {};
+let port = 0;
+
+exports.initSocketIOvars = function() {
+  config = require('./config_handler').mainConfig;
+  port = config.SOCKET_IO_PORT;
+  io = require('socket.io')(port);
+}
 
 exports.registerSocketEvents = () => {
-  console.log("SOCKET-IO:", 'socket.io handler started');
+  console.log(config.SOCKET_IO_HANDLER_MODULE_PREFIX, 'socket.io handler started, listening to port', port);
 
   io.on('connection', (socket) => {
     console.log('socket connected: ', + socket);
