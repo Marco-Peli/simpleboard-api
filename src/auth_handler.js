@@ -44,3 +44,24 @@ exports.validateRegisterData = async function(userData)
 
   return response;
 };
+
+exports.validateLoginData = async function(userData)
+{
+  let response = {
+    err_stat: constants.REG_SUCCESSFUL,
+    err_msg: ''
+  };
+
+  try
+  {
+    const value = await schema.validateAsync({email: userData.email, password: userData.password, passwordRep: userData.password, username: 'fakeuser'});
+  }
+  catch (err)
+  {
+    response.err_msg = err.details[0].message;
+    response.err_stat = constants.REG_FAILED;
+    console.log(err);
+  }
+
+  return response;
+};

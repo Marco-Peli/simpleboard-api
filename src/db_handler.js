@@ -29,13 +29,12 @@ exports.registerUser = async function (res, registerData)
   }
   let validateResp =  await regHandler.validateRegisterData(registerData);
   let salt = '';
-  let passHash = '';
 
   if(validateResp.err_stat !== consts.REG_FAILED)
   {
     try
     {
-      passHash = await bcrypt.hash(registerData.password, consts.SALT_ROUNDS);
+      const passHash = await bcrypt.hash(registerData.password, consts.SALT_ROUNDS);
       let digestData = {
         login: registerData.email,
         password: passHash
@@ -49,7 +48,7 @@ exports.registerUser = async function (res, registerData)
     {
       msg = {
   			err_stat: consts.REG_FAILED,
-  			err_msg: 'email already registered'
+  			err_msg: 'user already registered'
   		}
   	}
   }
@@ -68,21 +67,21 @@ exports.loginUser = async function (res, loginData)
     err_msg: 'login success'
   }
 
-  let compareRet = false;
-  let validateResp = {};
-
   try
   {
-    validateResp =  regHandler.validateRegisterData(loginData);
+    const validateResp = await regHandler.validateLoginData(loginData);
+
     if(validateResp.err_stat !== consts.LOGIN_SUCCESSFUL)
     {
       throw "Err";
     }
-    let passObj = await db('simpleboard-api.login').where({
-                  login: loginData.login
+
+    const passObj = await db('simpleboard-api.login').where({
+                  login: loginData.email
                 }).select('password');
-    let passHash = passObj[0].password;
-    let compareRet = await bcrypt.compare(loginData.password, passHash);
+    const passHash = passObj[0].password;
+    const compareRet = await bcrypt.compare(loginData.password, passHash);
+
     if(!compareRet)
     {
       throw 'Username and/or password is incorrect';

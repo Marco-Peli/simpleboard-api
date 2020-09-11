@@ -26,13 +26,13 @@ app.post(constants.REGISTER_PATH, async function (req, res) {
 	await dbHandler.registerUser(res, registerData);
 });
 
-app.post(constants.LOGIN_PATH, function (req, res) {
+app.post(constants.LOGIN_PATH, async function (req, res) {
 	let loginData = {
-		login: req.body.email,
+		email: req.body.email,
 		password: req.body.password
 	}
   console.log('LOGIN');
-	dbHandler.loginUser(res, loginData);
+	await dbHandler.loginUser(res, loginData);
 });
 
 app.listen(constants.SERVER_PORT, function () {
