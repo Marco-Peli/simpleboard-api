@@ -1,5 +1,5 @@
 let consts = {};
-const regHandler = require('./register_utils');
+const regHandler = require('./auth_handler');
 const bcrypt = require('bcrypt');
 
 let db = {};
@@ -27,7 +27,7 @@ exports.registerUser = async function (res, registerData)
     err_stat: consts.REG_SUCCESSFUL,
     err_msg: 'ok'
   }
-  let validateResp =  regHandler.validateRegisterData(registerData);
+  let validateResp =  await regHandler.validateRegisterData(registerData);
   let salt = '';
   let passHash = '';
 
@@ -37,12 +37,12 @@ exports.registerUser = async function (res, registerData)
     {
       passHash = await bcrypt.hash(registerData.password, consts.SALT_ROUNDS);
       let digestData = {
-        login: registerData.login,
+        login: registerData.email,
         password: passHash
       };
       await db.transaction(async trx => {
         await db('simpleboard-api.login').insert(digestData).transacting(trx);
-        await db('simpleboard-api.users').insert({username: registerData.login, join_date: new Date()}).transacting(trx);
+        await db('simpleboard-api.users').insert({username: registerData.email, join_date: new Date()}).transacting(trx);
       })
   	}
   	catch(err)
