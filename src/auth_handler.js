@@ -1,3 +1,5 @@
+var jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 let utils = require('./utilities');
 const Joi = require('joi');
 let constants = {};
@@ -22,6 +24,21 @@ exports.registerUtilsInitVars = function()
         email: Joi.string()
             .email({ minDomainSegments: 2 }).required()
     });
+}
+
+exports.validateToken = async function(req, res, next)
+{
+  console.log("validate token", req.body.auth_token);
+  try
+  {
+    const decoded = jwt.verify(req.body.auth_token, process.env.TOKEN_SECRET);
+    next();
+  }
+  catch (e)
+  {
+    res.send({resp: 'access-denied'});
+  }
+
 }
 
 exports.validateRegisterData = async function(userData)
@@ -65,3 +82,13 @@ exports.validateLoginData = async function(userData)
 
   return response;
 };
+
+exports.generateToken = (userData) => {
+  const payload = {
+    login: userData.login
+  }
+
+  const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+
+  return token;
+}

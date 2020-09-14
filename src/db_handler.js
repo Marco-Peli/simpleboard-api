@@ -1,5 +1,5 @@
 let consts = {};
-const regHandler = require('./auth_handler');
+const authHandler = require('./auth_handler');
 const bcrypt = require('bcrypt');
 
 let db = {};
@@ -25,9 +25,10 @@ exports.registerUser = async function (res, registerData)
 {
   let msg = {
     err_stat: consts.REG_SUCCESSFUL,
-    err_msg: 'ok'
+    err_msg: 'ok',
+    auth_token: ''
   }
-  let validateResp =  await regHandler.validateRegisterData(registerData);
+  let validateResp =  await authHandler.validateRegisterData(registerData);
   let salt = '';
 
   if(validateResp.err_stat !== consts.REG_FAILED)
@@ -43,6 +44,7 @@ exports.registerUser = async function (res, registerData)
         await db('simpleboard-api.login').insert(digestData).transacting(trx);
         await db('simpleboard-api.users').insert({username: registerData.email, join_date: new Date()}).transacting(trx);
       })
+      msg.auth_token = authHandler.generateToken(digestData);
   	}
   	catch(err)
     {
@@ -64,12 +66,13 @@ exports.loginUser = async function (res, loginData)
 {
   let msg = {
     err_stat: consts.LOGIN_SUCCESSFUL,
-    err_msg: 'login success'
+    err_msg: 'login success',
+    auth_token: ''
   }
 
   try
   {
-    const validateResp = await regHandler.validateLoginData(loginData);
+    const validateResp = await authHandler.validateLoginData(loginData);
 
     if(validateResp.err_stat !== consts.LOGIN_SUCCESSFUL)
     {
@@ -86,6 +89,9 @@ exports.loginUser = async function (res, loginData)
     {
       throw 'Username and/or password is incorrect';
     }
+
+    msg.auth_token = authHandler.generateToken({login: loginData.email}); 
+
 	}
 	catch(e)
   {

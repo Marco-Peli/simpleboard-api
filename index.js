@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 var constUtils = require('./src/config_handler');
 var dbHandler = require('./src/db_handler');
 var authHandler = require('./src/auth_handler');
@@ -6,6 +7,7 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 
+dotenv.config();
 constUtils.readConfigFile();
 dbHandler.dbHandlerInitVars();
 socketHandler.initSocketIOvars();
@@ -35,6 +37,10 @@ app.post(constants.LOGIN_PATH, async function (req, res) {
 	await dbHandler.loginUser(res, loginData);
 });
 
+app.post('/updateprof', authHandler.validateToken, async function(req,res){
+	res.send('ok');
+})
+
 app.listen(constants.SERVER_PORT, function () {
-  console.log(constants.MAIN_MODULE_PREFIX, 'Simpleboard-api running on port ' + constants.SERVER_PORT);
+  console.log(constants.MAIN_MODULE_PREFIX, 'Simpleboard-api running on port ' + process.env.PORT);
 });
